@@ -1,78 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin — @yield('title', config('app.name'))</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <style>[x-cloak] { display: none !important; }</style>
-</head>
-<body class="bg-gray-100">
+    <title>Admin — @yield('title', config('app.name', 'MarketPlace'))</title>
 
-<div class="flex h-screen overflow-hidden">
-    {{-- Sidebar --}}
-    <aside class="w-64 bg-gray-900 text-white flex-shrink-0 flex flex-col">
-        <div class="px-6 py-5 border-b border-gray-700">
-            <a href="{{ route('admin.dashboard') }}" class="text-xl font-bold text-white">MarketPlace</a>
-            <p class="text-xs text-gray-400 mt-1">Admin Panel</p>
-        </div>
-        <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-            @php
-                $navItems = [
-                    ['route' => 'admin.dashboard', 'label' => 'Dashboard', 'icon' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'],
-                    ['route' => 'admin.vendors.index', 'label' => 'Vendors', 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'],
-                    ['route' => 'admin.categories.index', 'label' => 'Categories', 'icon' => 'M4 6h16M4 10h16M4 14h16M4 18h16'],
-                    ['route' => 'admin.products.index', 'label' => 'Products', 'icon' => 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4'],
-                    ['route' => 'admin.orders.index', 'label' => 'Orders', 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'],
-                    ['route' => 'admin.users.index', 'label' => 'Customers', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z'],
-                ];
-            @endphp
-            @foreach($navItems as $item)
-                <a href="{{ route($item['route']) }}"
-                    class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors {{ request()->routeIs($item['route'].'*') ? 'bg-indigo-600 text-white' : 'text-gray-300 hover:bg-gray-700' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $item['icon'] }}"/>
-                    </svg>
-                    {{ $item['label'] }}
-                </a>
-            @endforeach
-        </nav>
-        <div class="px-4 py-4 border-t border-gray-700">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center text-xs font-bold">
-                    {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
-                </div>
-                <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium truncate">{{ auth()->user()->name }}</p>
-                    <p class="text-xs text-gray-400">Administrator</p>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('backend/assets/css/vendors/font-awesome.css') }}">
+    <!-- Flag Icon -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('backend/assets/css/vendors/flag-icon.css') }}">
+    <!-- Ico Font -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('backend/assets/css/vendors/icofont.css') }}">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('backend/assets/css/vendors/bootstrap.css') }}">
+    <!-- Theme Style -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('backend/assets/css/style.css') }}">
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+    {{-- Top Header --}}
+    <div class="page-main-header">
+        <div class="main-header-right row">
+            <div class="main-header-left d-lg-none w-auto">
+                <div class="logo-wrapper">
+                    <a href="{{ route('admin.dashboard') }}">
+                        <span class="f-w-700 f-16 txt-primary">MarketPlace</span>
+                    </a>
                 </div>
             </div>
-            <form method="POST" action="{{ route('logout') }}" class="mt-3">
-                @csrf
-                <button type="submit" class="w-full text-left text-xs text-gray-400 hover:text-white">Logout</button>
-            </form>
+            <div class="mobile-sidebar w-auto">
+                <div class="media-body text-end switch-sm">
+                    <label class="switch">
+                        <a href="javascript:void(0)"><i id="sidebar-toggle" data-feather="align-left"></i></a>
+                    </label>
+                </div>
+            </div>
+            <div class="nav-right col">
+                <ul class="nav-menus">
+                    <li>
+                        <form class="form-inline search-form" action="{{ route('admin.products.index') }}" method="GET">
+                            <div class="form-group">
+                                <input class="form-control-plaintext" type="search" name="q" placeholder="Search..">
+                                <span class="d-sm-none mobile-search"><i data-feather="search"></i></span>
+                            </div>
+                        </form>
+                    </li>
+                    <li>
+                        <a class="text-dark" href="#!" onclick="javascript:toggleFullScreen()">
+                            <i data-feather="maximize-2"></i>
+                        </a>
+                    </li>
+                    <li class="onhover-dropdown">
+                        <div class="media align-items-center">
+                            <div class="d-flex align-items-center justify-content-center rounded-circle bg-primary text-white" style="width:40px;height:40px;font-weight:700;">
+                                {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                            </div>
+                            <div class="dotted-animation">
+                                <span class="animate-circle"></span>
+                                <span class="main-circle"></span>
+                            </div>
+                        </div>
+                        <ul class="profile-dropdown onhover-show-div p-20 profile-dropdown-hover">
+                            <li>
+                                <a href="{{ route('admin.dashboard') }}">
+                                    <i data-feather="home"></i>Dashboard
+                                </a>
+                            </li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-link p-0 text-dark">
+                                        <i data-feather="log-out"></i>Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="d-lg-none mobile-toggle pull-right"><i data-feather="more-horizontal"></i></div>
+            </div>
         </div>
-    </aside>
+    </div>
+    {{-- /Top Header --}}
 
-    {{-- Main content --}}
-    <div class="flex-1 flex flex-col overflow-hidden">
-        <header class="bg-white shadow-sm px-6 py-4 flex items-center justify-between">
-            <h1 class="text-xl font-semibold text-gray-800">@yield('title', 'Dashboard')</h1>
-        </header>
+    <div class="page-body-wrapper">
 
-        @if(session('success'))
-            <div class="bg-green-50 border-b border-green-200 px-6 py-3 text-sm text-green-800">{{ session('success') }}</div>
-        @endif
-        @if(session('error'))
-            <div class="bg-red-50 border-b border-red-200 px-6 py-3 text-sm text-red-800">{{ session('error') }}</div>
-        @endif
+        {{-- Sidebar --}}
+        <div class="page-sidebar">
+            <div class="main-header-left d-none d-lg-block">
+                <div class="logo-wrapper">
+                    <a href="{{ route('admin.dashboard') }}">
+                        <span class="f-w-700 f-18 p-l-20 txt-primary">MarketPlace</span>
+                    </a>
+                </div>
+            </div>
+            <div class="sidebar custom-scrollbar">
+                <a href="javascript:void(0)" class="sidebar-back d-lg-none d-block">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </a>
+                <div class="sidebar-user">
+                    <div class="d-flex align-items-center justify-content-center rounded-circle bg-primary text-white mx-auto mb-2" style="width:60px;height:60px;font-size:22px;font-weight:700;">
+                        {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                    </div>
+                    <div>
+                        <h6 class="f-14">{{ strtoupper(auth()->user()->name) }}</h6>
+                        <p>Administrator</p>
+                    </div>
+                </div>
+                <ul class="sidebar-menu">
+                    <li>
+                        <a class="sidebar-header {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
+                            <i data-feather="home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
 
-        <main class="flex-1 overflow-y-auto p-6">
-            @yield('content')
-        </main>
+                    <li>
+                        <a class="sidebar-header {{ request()->routeIs('admin.products.*') ? 'active' : '' }}" href="{{ route('admin.products.index') }}">
+                            <i data-feather="box"></i>
+                            <span>Products</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="sidebar-header {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}" href="{{ route('admin.categories.index') }}">
+                            <i data-feather="list"></i>
+                            <span>Categories</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="sidebar-header {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}" href="{{ route('admin.orders.index') }}">
+                            <i data-feather="archive"></i>
+                            <span>Orders</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="sidebar-header {{ request()->routeIs('admin.vendors.*') ? 'active' : '' }}" href="{{ route('admin.vendors.index') }}">
+                            <i data-feather="users"></i>
+                            <span>Vendors</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="sidebar-header {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
+                            <i data-feather="user"></i>
+                            <span>Customers</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="sidebar-header" href="{{ route('home') }}" target="_blank">
+                            <i data-feather="external-link"></i>
+                            <span>View Store</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        {{-- /Sidebar --}}
+
+        <div class="page-body">
+            {{-- Flash Messages --}}
+            @if(session('success'))
+                <div class="container-fluid pt-3">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="container-fluid pt-3">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                </div>
+            @endif
+
+            {{-- Page Header --}}
+            <div class="container-fluid">
+                <div class="page-header">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="page-header-left">
+                                <h3>@yield('title', 'Dashboard')
+                                    <small>MarketPlace Admin</small>
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <ol class="breadcrumb pull-right">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.dashboard') }}"><i data-feather="home"></i></a>
+                                </li>
+                                <li class="breadcrumb-item active">@yield('title', 'Dashboard')</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- /Page Header --}}
+
+            {{-- Main Content --}}
+            <div class="container-fluid">
+                @yield('content')
+            </div>
+
+            {{-- Footer --}}
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6 footer-copyright">
+                            <p class="mb-0">Copyright &copy; {{ date('Y') }} MarketPlace. All rights reserved.</p>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <p class="mb-0">Built with Laravel 12</p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
     </div>
 </div>
+
+<!-- jQuery -->
+<script src="{{ asset('backend/assets/js/jquery-3.3.1.min.js') }}"></script>
+<!-- Bootstrap -->
+<script src="{{ asset('backend/assets/js/bootstrap.bundle.min.js') }}"></script>
+<!-- Feather Icon -->
+<script src="{{ asset('backend/assets/js/icons/feather-icon/feather.min.js') }}"></script>
+<script src="{{ asset('backend/assets/js/icons/feather-icon/feather-icon.js') }}"></script>
+<!-- Sidebar -->
+<script src="{{ asset('backend/assets/js/sidebar-menu.js') }}"></script>
+<!-- Lazy load -->
+<script src="{{ asset('backend/assets/js/lazysizes.min.js') }}"></script>
+<!-- Admin Script -->
+<script src="{{ asset('backend/assets/js/admin-script.js') }}"></script>
+
+@stack('scripts')
 
 </body>
 </html>

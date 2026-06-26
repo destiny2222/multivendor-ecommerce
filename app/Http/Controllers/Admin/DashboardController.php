@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Store;
@@ -19,6 +20,8 @@ class DashboardController extends Controller
         $totalProducts = Product::count();
         $totalOrders = Order::count();
         $totalRevenue = Order::whereNotIn('status', ['cancelled', 'refunded'])->sum('total');
+        $pendingOrders = Order::where('status', 'pending')->count();
+        $totalCategories = Category::count();
 
         $recentOrders = Order::with('user', 'items')->latest()->limit(5)->get();
         $recentVendors = Store::with('user')->latest()->limit(5)->get();
@@ -26,6 +29,7 @@ class DashboardController extends Controller
         return view('admin.dashboard', compact(
             'totalUsers', 'totalVendors', 'pendingVendors',
             'totalProducts', 'totalOrders', 'totalRevenue',
+            'pendingOrders', 'totalCategories',
             'recentOrders', 'recentVendors'
         ));
     }
