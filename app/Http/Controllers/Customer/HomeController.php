@@ -32,7 +32,11 @@ class HomeController extends Controller
             ->limit(6)
             ->get();
 
-        return view('customer.home', compact('featuredProducts', 'categories', 'featuredStores'));
+        $sliders = \App\Models\Slider::where('is_active', true)
+            ->orderBy('sort_order')
+            ->get();
+
+        return view('customer.home', compact('featuredProducts', 'categories', 'featuredStores', 'sliders'));
     }
 
     public function store(Store $store): View

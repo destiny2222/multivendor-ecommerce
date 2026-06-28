@@ -89,10 +89,13 @@ Route::middleware(['auth', 'role:vendor'])->prefix('vendor')->name('vendor.')->g
     Route::patch('/orders/{orderItem}/status', [VendorOrderController::class, 'updateStatus'])->name('orders.update-status');
 });
 
+use App\Http\Controllers\Admin\SliderController as AdminSliderController;
+
 // Admin routes
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
+    Route::resource('sliders', AdminSliderController::class);
     Route::resource('categories', AdminCategoryController::class);
     Route::resource('vendors', AdminVendorController::class)->only(['index', 'show', 'destroy']);
     Route::patch('/vendors/{user}/status', [AdminVendorController::class, 'updateStatus'])->name('vendors.update-status');
