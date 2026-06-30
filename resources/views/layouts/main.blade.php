@@ -98,7 +98,7 @@
                     <div class="header-left mr-md-4">
                         <a href="{{ route('home') }}" class="mobile-menu-toggle w-icon-hamburger" aria-label="menu-toggle"></a>
                         <a href="{{ route('home') }}" class="logo ml-lg-0">
-                            <img src="{{ asset('assets/images/demos/demo2/header-logo.png') }}" alt="{{ config('app.name') }}" width="144" height="45">
+                            {{-- <img src="{{ asset('assets/images/demos/demo2/header-logo.png') }}" alt="{{ config('app.name') }}" width="144" height="45"> --}}
                         </a>
                         <nav class="main-nav">
                             <ul class="menu">
@@ -315,7 +315,7 @@
                         <div class="col-lg-4 col-sm-6">
                             <div class="widget widget-about">
                                 <a href="{{ route('home') }}" class="logo-footer">
-                                    <img src="{{ asset('assets/images/demos/demo2/footer-logo.png') }}" alt="{{ config('app.name') }}" width="144" height="45">
+                                    {{-- <img src="{{ asset('assets/images/demos/demo2/footer-logo.png') }}" alt="{{ config('app.name') }}" width="144" height="45"> --}}
                                 </a>
                                 <div class="widget-body">
                                     <p class="widget-about-title">Got Question? Call us 24/7</p>

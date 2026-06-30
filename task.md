@@ -1,0 +1,15 @@
+- [x] Create `banners` database migration
+- [x] Create `Banner` model
+- [x] Create `BannerSeeder` to populate demo data
+- [x] Create `BannerRequest` for validation
+- [x] Create `BannerController` for CRUD actions
+- [x] Register routes in `routes/admin.php`
+- [x] Update admin sidebar `layouts/menu.blade.php` to include Banners management
+- [x] Create Admin Banners views:
+  - [x] `resources/views/admin/banners/index.blade.php`
+  - [x] `resources/views/admin/banners/create.blade.php`
+  - [x] `resources/views/admin/banners/edit.blade.php`
+- [x] Update customer `HomeController.php` to query banners
+- [x] Update customer `home.blade.php` to display banners dynamically
+- [x] Make homepage "Top Rated Products" dynamic
+- [x] Make homepage "Consumer Electronics" tabs dynamic (New Arrivals, Best Seller, Most Popular, View All)

@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SliderRequest;
 use App\Models\Slider;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class SliderController extends Controller
@@ -22,18 +21,26 @@ class SliderController extends Controller
         return view('admin.sliders.create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(SliderRequest $request): RedirectResponse
     {
-        $validated = $this->validateSlider($request);
+        $validated = $request->validated();
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('sliders', 'public');
+            $imageName = time() . '.' . $request->image->extension();
+            // save directly to public folder
+            $request->image->move(public_path('upload/sliders'), $imageName);
+            $validated['image'] = $imageName;
         }
 
         if ($request->hasFile('background_image')) {
-            $validated['background_image'] = $request->file('background_image')->store('sliders', 'public');
+           $backgroundImageName = time() . '_bg.' . $request->background_image->extension();
+           // save directly to public folder
+            $request->background_image->move(public_path('upload/sliders'), $backgroundImageName);
+            $validated['background_image'] = $backgroundImageName;
         }
 
+        $validated['is_active'] = $request->has('is_active');
+       
         Slider::create($validated);
 
         return redirect()->route('admin.sliders.index')->with('success', 'Slider created successfully.');
@@ -44,23 +51,39 @@ class SliderController extends Controller
         return view('admin.sliders.edit', compact('slider'));
     }
 
-    public function update(Request $request, Slider $slider): RedirectResponse
+    public function update(SliderRequest $request, Slider $slider): RedirectResponse
     {
-        $validated = $this->validateSlider($request);
+        $validated = $request->validated();
 
         if ($request->hasFile('image')) {
             if ($slider->image) {
-                Storage::disk('public')->delete($slider->image);
+                // delete old image
+                $oldImagePath = str_replace('public/', '', $slider->image);
+                if (file_exists(public_path($oldImagePath))) {
+                    unlink(public_path($oldImagePath));
+                }
             }
-            $validated['image'] = $request->file('image')->store('sliders', 'public');
+            $imageName = time() . '.' . $request->image->extension();
+            // save directly to public folder
+            $request->image->move(public_path('upload/sliders'), $imageName);
+            $validated['image'] = $imageName;
         }
 
         if ($request->hasFile('background_image')) {
             if ($slider->background_image) {
-                Storage::disk('public')->delete($slider->background_image);
+               // delete old image
+                $oldBgPath = str_replace('public/', '', $slider->background_image);
+                if (file_exists(public_path($oldBgPath))) {
+                    unlink(public_path($oldBgPath));
+                }
             }
-            $validated['background_image'] = $request->file('background_image')->store('sliders', 'public');
+            $backgroundImageName = time() . '_bg.' . $request->background_image->extension();
+            // save directly to public folder
+            $request->background_image->move(public_path('upload/sliders'), $backgroundImageName);
+            $validated['background_image'] = $backgroundImageName;
         }
+
+        $validated['is_active'] = $request->has('is_active');
 
         $slider->update($validated);
 
@@ -70,31 +93,20 @@ class SliderController extends Controller
     public function destroy(Slider $slider): RedirectResponse
     {
         if ($slider->image) {
-            Storage::disk('public')->delete($slider->image);
+            $imagePath = str_replace('public/', '', $slider->image);
+            if (file_exists(public_path($imagePath))) {
+                unlink(public_path($imagePath));
+            }
         }
         if ($slider->background_image) {
-            Storage::disk('public')->delete($slider->background_image);
+            $imagePath = str_replace('public/', '', $slider->background_image);
+            if (file_exists(public_path($imagePath))) {
+                unlink(public_path($imagePath));
+            }
         }
 
         $slider->delete();
 
         return redirect()->route('admin.sliders.index')->with('success', 'Slider deleted successfully.');
-    }
-
-    private function validateSlider(Request $request): array
-    {
-        return $request->validate([
-            'title' => ['nullable', 'string', 'max:255'],
-            'subtitle' => ['nullable', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'image' => ['nullable', 'image', 'max:2048'],
-            'background_image' => ['nullable', 'image', 'max:2048'],
-            'background_color' => ['nullable', 'string', 'max:50'],
-            'button_text' => ['nullable', 'string', 'max:255'],
-            'button_link' => ['nullable', 'string', 'max:255'],
-            'alignment' => ['required', 'in:left,right,center'],
-            'is_active' => ['boolean'],
-            'sort_order' => ['integer', 'min:0'],
-        ]);
     }
 }

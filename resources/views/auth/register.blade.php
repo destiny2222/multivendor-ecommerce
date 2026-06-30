@@ -36,26 +36,6 @@
                         <div class="tab-pane active">
                             <form method="POST" action="{{ route('register') }}">
                                 @csrf
-
-                                <div class="form-group mb-4">
-                                    <label class="form-label">I want to *</label>
-                                    <div class="d-flex gap-3">
-                                        <label class="d-flex align-items-center gap-2 cursor-pointer">
-                                            <input type="radio" name="role" value="customer"
-                                                   {{ old('role', 'customer') === 'customer' ? 'checked' : '' }}>
-                                            <span>Shop / Buy</span>
-                                        </label>
-                                        <label class="d-flex align-items-center gap-2 cursor-pointer ml-4">
-                                            <input type="radio" name="role" value="vendor"
-                                                   {{ old('role') === 'vendor' ? 'checked' : '' }}>
-                                            <span>Sell / Become a Vendor</span>
-                                        </label>
-                                    </div>
-                                    @error('role')
-                                        <span class="text-danger d-block mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
                                 <div class="form-group mb-3">
                                     <label for="name">Full Name *</label>
                                     <input type="text" id="name" name="name" value="{{ old('name') }}"

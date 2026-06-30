@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.master')
 
 @section('title', 'Sliders')
 
@@ -31,7 +31,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
                                         @if($slider->background_image)
-                                            <img src="{{ Storage::url($slider->background_image) }}" alt="BG" width="60" class="img-thumbnail">
+                                            <img src="{{ asset('upload/sliders/'.$slider->background_image) }}" alt="BG" width="60" class="img-thumbnail">
                                         @else
                                             <div style="width:60px;height:40px;background-color:{{ $slider->background_color ?? '#ccc' }}"></div>
                                         @endif
